@@ -1,20 +1,33 @@
 export interface Property {
-  id: number;
+  id: number | string;
   title: string;
   location: string;
-  price: string;
-  details: string;
+  price: number;
+  details?: string;
   imageUrl: string;
   description: string;
   tag?: {
     text: string;
     type: 'new' | 'premium' | 'open-house' | 'auction';
   };
-  tourAvailable: boolean;
-  button: {
+  tourAvailable?: boolean;
+  button?: {
     text: string;
     icon: 'eye' | 'route';
   };
+  // Additional properties for ModernPropertyCard
+  bedrooms?: number;
+  bathrooms?: number;
+  parking?: number;
+  size?: string;
+  amenities?: string[];
+  agent?: {
+    name: string;
+    phone?: string;
+    email?: string;
+  };
+  listedDate?: string;
+  listingType?: 'For Sale' | 'For Rent' | 'For Lease';
 }
 
 export interface SearchParams {
@@ -45,8 +58,8 @@ export const generateMockResults = (params: SearchParams): Property[] => {
   const results: Property[] = [];
   const count = 3 + Math.floor(Math.random() * 2);
 
-  const defaultLocations = ['Sydney, NSW', 'Melbourne, VIC', 'Brisbane, QLD', 'Perth, WA', 'Auckland', 'Queenstown', 'Wellington'];
-  const defaultTypes = ['Condo', 'House', 'Loft', 'Townhouse', 'Apartment'];
+  const defaultLocations = ['Sydney, NSW', 'Melbourne, VIC', 'Brisbane, QLD', 'Perth, WA', 'Bondi Beach, NSW', 'South Yarra, VIC', 'Surfers Paradise, QLD'];
+  const defaultTypes = ['Apartment', 'House', 'Townhouse', 'Unit', 'Villa'];
 
   const allTags: { text: string; type: 'new' | 'premium' | 'open-house' | 'auction' }[] = [
     { text: 'New', type: 'new' },
@@ -55,12 +68,15 @@ export const generateMockResults = (params: SearchParams): Property[] => {
     { text: 'Auction', type: 'auction' }
   ];
 
+  const allAmenities = ['Pool', 'Garage', 'Garden', 'Balcony', 'Air Conditioning', 'Gym', 'Waterfront', 'Sea View', 'Mountain View', 'Pet Friendly'];
+
   for (let i = 0; i < count; i++) {
     const id = Date.now() + i;
     const location = params.location || defaultLocations[i % defaultLocations.length];
     const propertyType = params.propertyType || defaultTypes[i % defaultTypes.length];
     const bedrooms = params.bedroomsMin || (2 + i);
     const bathrooms = params.bathroomsMin || (bedrooms > 1 ? bedrooms - 1 : 1);
+    const parking = Math.floor(Math.random() * 3);
 
     let sqm: number;
     const defaultSqm = 110 + bedrooms * 35;
@@ -73,32 +89,34 @@ export const generateMockResults = (params: SearchParams): Property[] => {
       sqm = defaultSqm + Math.floor(Math.random() * 40 - 20);
     }
 
-    const amenities = params.amenities || [];
+    const amenities = params.amenities && params.amenities.length > 0
+      ? params.amenities
+      : allAmenities.sort(() => 0.5 - Math.random()).slice(0, 3 + Math.floor(Math.random() * 3));
+
     let title = `${params.style || 'Spacious'} ${propertyType}`;
     if (amenities.length > 0) {
       title = `${params.style || 'Modern'} ${propertyType} with ${amenities[0]}`;
     }
 
-    let priceDisplay: string;
+    let priceValue: number;
+    const listingType = params.listingType || 'For Sale';
 
-    if (params.listingType === 'For Rent' || params.listingType === 'For Lease') {
+    if (listingType === 'For Rent' || listingType === 'For Lease') {
       const minRentDefault = 2000;
       const maxRentDefault = 15000;
-      let rent = (params.priceMin || minRentDefault) + Math.random() * ((params.priceMax || maxRentDefault) - (params.priceMin || minRentDefault));
-      rent = Math.round(rent / 100) * 100;
-      if (params.priceMax && rent > params.priceMax) rent = params.priceMax;
-      if (params.priceMin && rent < params.priceMin) rent = params.priceMin;
-      priceDisplay = `$${rent.toLocaleString()}/mo`;
+      priceValue = (params.priceMin || minRentDefault) + Math.random() * ((params.priceMax || maxRentDefault) - (params.priceMin || minRentDefault));
+      priceValue = Math.round(priceValue / 100) * 100;
+      if (params.priceMax && priceValue > params.priceMax) priceValue = params.priceMax;
+      if (params.priceMin && priceValue < params.priceMin) priceValue = params.priceMin;
     } else {
       const minPriceDefault = 800000;
       const maxPriceDefault = 5000000;
-      let price = (params.priceMin || minPriceDefault) + Math.random() * ((params.priceMax || maxPriceDefault) - (params.priceMin || minPriceDefault));
-      if (params.priceMin && !params.priceMax) price = Math.max(price, params.priceMin);
-      if (params.priceMax && !params.priceMin) price = Math.min(price, params.priceMax);
-      price = Math.round(price / 100000) * 100000;
-      if (params.priceMax && price > params.priceMax) price = params.priceMax;
-      if (params.priceMin && price < params.priceMin) price = params.priceMin;
-      priceDisplay = `$${Number((price / 1_000_000).toFixed(2))}M`;
+      priceValue = (params.priceMin || minPriceDefault) + Math.random() * ((params.priceMax || maxPriceDefault) - (params.priceMin || minPriceDefault));
+      if (params.priceMin && !params.priceMax) priceValue = Math.max(priceValue, params.priceMin);
+      if (params.priceMax && !params.priceMin) priceValue = Math.min(priceValue, params.priceMax);
+      priceValue = Math.round(priceValue / 100000) * 100000;
+      if (params.priceMax && priceValue > params.priceMax) priceValue = params.priceMax;
+      if (params.priceMin && priceValue < params.priceMin) priceValue = params.priceMin;
     }
 
     let tag;
@@ -109,17 +127,32 @@ export const generateMockResults = (params: SearchParams): Property[] => {
       tag = allTags[Math.floor(Math.random() * allTags.length)];
     }
 
+    // Generate a random listed date within the last 30 days
+    const listedDate = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString();
+
     results.push({
       id: id,
       title: title,
       location: location,
-      price: priceDisplay,
+      price: priceValue,
       details: `${bedrooms} bd • ${bathrooms} ba • ${sqm} sqm`,
       imageUrl: `https://picsum.photos/800/600?random=${id}`,
-      description: `Discover this stunning ${propertyType.toLowerCase()} in the heart of ${location}. Featuring ${bedrooms} bedrooms and ${bathrooms} bathrooms, this property offers an expansive ${sqm} sqm of modern living space. The open-concept layout is perfect for entertaining, with high ceilings and large windows that flood the space with natural light.`,
+      description: `Discover this stunning ${propertyType.toLowerCase()} in the heart of ${location}. Featuring ${bedrooms} bedrooms and ${bathrooms} bathrooms, this property offers an expansive ${sqm} sqm of modern living space.`,
       tag: tag,
       tourAvailable: Math.random() > 0.5,
-      button: { text: 'Virtual tour', icon: 'eye' }
+      button: { text: 'Virtual tour', icon: 'eye' },
+      bedrooms,
+      bathrooms,
+      parking,
+      size: `${sqm} sqm`,
+      amenities,
+      agent: {
+        name: `Agent ${Math.floor(Math.random() * 10) + 1}`,
+        phone: '0412 345 678',
+        email: `agent${Math.floor(Math.random() * 10) + 1}@realestate.com.au`
+      },
+      listedDate,
+      listingType
     });
   }
   return results;

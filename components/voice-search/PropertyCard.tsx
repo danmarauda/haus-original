@@ -50,7 +50,13 @@ export function PropertyCard({ property, onSave, isSaved = false }: PropertyCard
             <h3 className="text-lg font-semibold text-white">{property.title}</h3>
             <p className="text-sm text-white/60">{property.location}</p>
           </div>
-          <p className="text-xl font-bold text-[#D4C1B3]">{property.price}</p>
+          <p className="text-xl font-bold text-[#D4C1B3]">
+            {typeof property.price === 'number'
+              ? (property.price >= 1000000
+                  ? `$${(property.price / 1000000).toFixed(2)}M`
+                  : `$${(property.price / 1000).toFixed(0)}K`)
+              : property.price}
+          </p>
         </div>
 
         <p className="mb-3 text-sm text-white/70">{property.details}</p>
