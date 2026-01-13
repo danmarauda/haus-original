@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 27 29% 77%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 25 33% 63%;
+    --accent-foreground: 0 0% 0%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 27 29% 77%;
+    --radius: 0;
+  }
+
+  body {
+    @apply bg-black text-white font-light;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply uppercase font-light;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-extralight tracking-mega-wide;
+  }
+
+  h2 {
+    @apply text-2xl md:text-3xl font-extralight tracking-ultra-wide;
+  }
+
+  h3 {
+    @apply text-xl md:text-2xl font-light tracking-super-wide;
+  }
+
+  h4 {
+    @apply text-lg font-light tracking-widest;
+  }
+}
+
+@layer components {
+  .alias-btn {
+    @apply inline-flex items-center justify-center py-3 px-6 uppercase tracking-wider text-xs font-light transition-all duration-300;
+  }
+
+  .alias-btn-primary {
+    @apply bg-white text-black hover:bg-alias-ivory;
+  }
+
+  .alias-btn-secondary {
+    @apply bg-transparent border border-white/30 text-white hover:border-white/80;
+  }
+
+  .alias-card {
+    @apply border border-white/5 bg-black/20 p-5 transition-all duration-300;
+  }
+
+  .alias-card:hover {
+    @apply border-white/15 -translate-y-1 shadow-lg;
+  }
+
+  .alias-nav-link {
+    @apply font-light tracking-wider text-xs uppercase opacity-70 transition-all duration-300 relative;
+  }
+
+  .alias-nav-link:hover {
+    @apply opacity-100;
+  }
+}

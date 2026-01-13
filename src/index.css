@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-vercel-bg text-vercel-text-primary font-sans antialiased;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styling for Clerk components to better fit the dark theme */
+.cl-userButtonPopoverCard {
+  @apply bg-vercel-card-bg border-vercel-border !important;
+}
+.cl-userButtonPopoverMain {
+  @apply bg-vercel-card-bg !important;
+}
+.cl-userButtonPopoverActions {
+  @apply bg-vercel-card-bg !important;
+}
+.cl-userButtonPopoverActionButton {
+  @apply text-vercel-text-primary hover:bg-vercel-border !important;
+}
+.cl-userButtonPopoverActionButton__icon {
+  @apply text-vercel-text-secondary !important;
+}
+.cl-userButtonPopoverFooter {
+  @apply bg-vercel-card-bg !important;
+}
+
+.cl-modalContent {
+  @apply bg-vercel-card-bg text-vercel-text-primary border-vercel-border !important;
+}
+.cl-modalBackdrop {
+  @apply bg-black/70 !important;
+}
+.cl-headerTitle,
+.cl-headerSubtitle,
+.cl-socialButtonsBlockButtonText,
+.cl-footerActionText {
+  @apply text-vercel-text-primary !important;
+}
+.cl-formFieldLabel,
+.cl-formFieldHint {
+  @apply text-vercel-text-secondary !important;
+}
+.cl-formButtonPrimary {
+  @apply bg-vercel-accent text-black hover:bg-vercel-accent-hover !important;
+  border-radius: 6px !important; /* Slightly rounded buttons */
+}
+.cl-input {
+  @apply bg-black border-vercel-border text-vercel-text-primary focus:ring-vercel-accent focus:border-vercel-accent !important;
+  border-radius: 6px !important;
+}
+.cl-dividerLine {
+  @apply bg-vercel-border !important;
+}
+.cl-dividerText {
+  @apply text-vercel-text-secondary !important;
+}
+.cl-socialButtonsBlockButton {
+  @apply bg-vercel-border hover:bg-gray-700 border-gray-600 !important;
+  border-radius: 6px !important;
+}
+.cl-footerActionLink {
+  @apply text-vercel-accent hover:text-vercel-accent-hover !important;
+}
+.cl-identityPreview {
+  @apply border-vercel-border bg-black text-vercel-text-primary !important;
+}
+.cl-identityPreviewEditButton {
+  @apply text-vercel-accent hover:text-vercel-accent-hover !important;
+}
+.cl-avatarImage {
+  border-radius: 9999px !important; /* Ensure avatars are round */
+}
