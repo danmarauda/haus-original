@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="bg-minimal-background text-minimal-text-primary font-sans">
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <body className="bg-minimal-background text-minimal-text-primary font-sans" suppressHydrationWarning>
         <Providers>
           <MainNav />
           <main className="pt-[73px]">
